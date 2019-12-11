@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.konan.CompilerVersion
 import org.jetbrains.kotlin.konan.file.File
 import org.jetbrains.kotlin.konan.library.defaultResolver
 import org.jetbrains.kotlin.konan.parseCompilerVersion
+import org.jetbrains.kotlin.konan.target.CompilerOutputKind
 import org.jetbrains.kotlin.konan.target.Distribution
 import org.jetbrains.kotlin.konan.target.KonanTarget
 import org.jetbrains.kotlin.library.UnresolvedLibrary
@@ -62,7 +63,8 @@ class KonanLibrariesResolveSupport(
             target,
             distribution,
             compatibleCompilerVersions,
-            resolverLogger
+            resolverLogger,
+            allowEmptyTargets = configuration.get(KonanConfigKeys.PRODUCE) == CompilerOutputKind.DESCRIPTORS_ONLY_LIBRARY
     ).libraryResolver()
 
     // We pass included libraries by absolute paths to avoid repository-based resolution for them.

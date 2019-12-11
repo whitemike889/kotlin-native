@@ -31,7 +31,8 @@ fun defaultResolver(
     distribution: Distribution,
     compatibleCompilerVersions: List<CompilerVersion> = emptyList(),
     logger: Logger = DummyLogger,
-    skipCurrentDir: Boolean = false
+    skipCurrentDir: Boolean = false,
+    allowEmptyTargets: Boolean = false
 ): SearchPathResolverWithTarget<KonanLibrary> = KonanLibraryProperResolver(
         repositories,
         directLibs,
@@ -41,7 +42,8 @@ fun defaultResolver(
         distribution.klib,
         distribution.localKonanDir.absolutePath,
         skipCurrentDir,
-        logger
+        logger,
+        allowEmptyTargets
 )
 
 fun resolverByName(
@@ -72,7 +74,8 @@ internal class KonanLibraryProperResolver(
     distributionKlib: String?,
     localKonanDir: String?,
     skipCurrentDir: Boolean,
-    override val logger: Logger
+    override val logger: Logger,
+    private val allowEmptyTargets: Boolean
 ) : KotlinLibraryProperResolverWithAttributes<KonanLibrary>(
     repositories, directLibs,
     knownAbiVersions,
@@ -93,7 +96,9 @@ internal class KonanLibraryProperResolver(
         val resolverTarget = this.target
         val candidatePath = candidate.libraryFile.absolutePath
 
-        if (!candidate.targetList.contains(resolverTarget.visibleName)) {
+        if (!candidate.targetList.contains(resolverTarget.visibleName) &&
+                (candidate.targetList.isNotEmpty() || !allowEmptyTargets)
+        ) {
             logger.warning("skipping $candidatePath. The target doesn't match. Expected '$resolverTarget', found ${candidate.targetList}")
             return false
         }

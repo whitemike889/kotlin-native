@@ -36,9 +36,9 @@ open class TargetedLibraryImpl(
 
     override val targetList by lazy {
         access.inPlace { it: TargetedKotlinLibraryLayout ->
-            it.targetsDir.listFiles.map {
+            it.targetsDir.takeIf { it.exists }?.listFiles?.map {
                 it.name
-            }
+            }.orEmpty()
         }
     }
 
