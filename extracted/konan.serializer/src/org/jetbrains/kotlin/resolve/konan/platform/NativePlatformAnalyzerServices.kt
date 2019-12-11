@@ -10,10 +10,12 @@ import org.jetbrains.kotlin.resolve.PlatformConfigurator
 import org.jetbrains.kotlin.resolve.PlatformDependentAnalyzerServices
 import org.jetbrains.kotlin.storage.StorageManager
 
-object NativePlatformAnalyzerServices : PlatformDependentAnalyzerServices() {
+class NativePlatformAnalyzerServices(shouldCheckExpectActual: Boolean)
+    : PlatformDependentAnalyzerServices() {
+
     override fun computePlatformSpecificDefaultImports(storageManager: StorageManager, result: MutableList<ImportPath>) {
         result.add(ImportPath.fromString("kotlin.native.*"))
     }
 
-    override val platformConfigurator: PlatformConfigurator = KonanPlatformConfigurator
+    override val platformConfigurator: PlatformConfigurator = KonanPlatformConfigurator(shouldCheckExpectActual)
 }

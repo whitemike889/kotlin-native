@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl
 import org.jetbrains.kotlin.descriptors.konan.CurrentKlibModuleOrigin
 import org.jetbrains.kotlin.descriptors.konan.isKonanStdlib
 import org.jetbrains.kotlin.konan.file.File
+import org.jetbrains.kotlin.konan.target.CompilerOutputKind
 import org.jetbrains.kotlin.konan.utils.KonanFactories
 import org.jetbrains.kotlin.library.KotlinLibrary
 import org.jetbrains.kotlin.name.FqName
@@ -80,7 +81,8 @@ internal object TopDownAnalyzerFacadeForKonan {
                 moduleContext, trace,
                 FileBasedDeclarationProviderFactory(moduleContext.storageManager, files),
                 context.config.configuration.get(CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS)!!,
-                additionalPackages
+                additionalPackages,
+                shouldCheckExpectActual = context.config.produce != CompilerOutputKind.DESCRIPTORS_ONLY_LIBRARY
         ) {
             initContainer(context.config)
         }.apply {

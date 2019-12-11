@@ -25,10 +25,13 @@ fun createTopDownAnalyzerProviderForKonan(
         declarationProviderFactory: DeclarationProviderFactory,
         languageVersionSettings: LanguageVersionSettings,
         additionalPackages: List<PackageFragmentProvider>,
+        shouldCheckExpectActual: Boolean,
         initContainer: StorageComponentContainer.() -> Unit
 ): ComponentProvider {
-    return createContainer("TopDownAnalyzerForKonan", NativePlatformAnalyzerServices) {
-        configureModule(moduleContext, KonanPlatforms.defaultKonanPlatform, NativePlatformAnalyzerServices, bindingTrace, languageVersionSettings)
+    val analyzerServices = NativePlatformAnalyzerServices(shouldCheckExpectActual)
+
+    return createContainer("TopDownAnalyzerForKonan", analyzerServices) {
+        configureModule(moduleContext, KonanPlatforms.defaultKonanPlatform, analyzerServices, bindingTrace, languageVersionSettings)
 
         useInstance(declarationProviderFactory)
         useImpl<AnnotationResolverImpl>()
