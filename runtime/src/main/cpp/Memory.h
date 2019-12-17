@@ -548,6 +548,10 @@ void MutationCheck(ObjHeader* obj);
 void FreezeSubgraph(ObjHeader* obj);
 // Ensure this object shall block freezing.
 void EnsureNeverFrozen(ObjHeader* obj);
+// APIs for the async GC.
+void GC_RegisterWorker(void* worker) RUNTIME_NOTHROW;
+void GC_UnregisterWorker(void* worker) RUNTIME_NOTHROW;
+void GC_RendezvouzCallback(void* worker) RUNTIME_NOTHROW;
 #ifdef __cplusplus
 }
 #endif
